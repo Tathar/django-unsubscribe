@@ -1,0 +1,48 @@
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+<div id="formset" data-formset-prefix="{{ formset.prefix }}">
+{{ formset.management_form }}
+
+
+
+<div data-formset-body>
+	{% for form in formset %}
+		{% include "core/bs4LoopFormSet.html" with form=form only %}
+	{% endfor %}
+</div>
+
+	
+	{% if add_btn %}
+	<button type="button" class="btn btn-info" data-formset-add>{{ add_btn }}</button>
+	{% else %}
+	<button type="button" class="btn btn-info" data-formset-add>+</button>
+    {% endif %}
+    {% if submit_btn %}
+  	<button type="submit" class="btn btn-primary">{{ submit_btn }}</button>
+    {% endif %}
+    
+<!-- The empty form template. By wrapping this in a <script> tag, the
+    __prefix__ placeholder can easily be replaced in both attributes and
+    any scripts -->
+    <script type="form-template" data-formset-empty-form>
+            {% escapescript %}
+                {% include "core/bs4LoopFormSet.html" with form=formset.empty_form only %}
+            {% endescapescript %}
+    </script>
+</div>
+
+
+
+<!-- This button will add a new form when clicked -->
+
+
+{% load static %}
+<script src="{% static "/js/jquery.formset.js" %}"></script>
+<script>
+jQuery(function($) {
+        $("#formset").formset({
+            animateForms: true,
+        });
+    });
+</script>

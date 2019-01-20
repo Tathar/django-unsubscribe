@@ -1,0 +1,20 @@
+{% extends "core/base_left_context_menu.html" %}
+
+{% load sitetree %}
+
+{% block container %}
+<section class="widget shadow-01 mb-4" id="widget-01">
+	<div class="widget-block">
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <button type="button" class="btn btn-success" onclick="window.location.replace('{% url 'mail:index' %}')"> Cancel </button>
+    <button type="submit" class="btn btn-danger" > Confirm </button>
+</form>
+</div>
+</section>
+
+{% endblock %}
+
+
+{% block custom_js %}
+{% endblock %}

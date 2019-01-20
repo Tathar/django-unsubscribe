@@ -1,0 +1,8 @@
+{% extends "core/base_left_menu.html" %}
+
+{% load sitetree %}
+
+{% block breadcrumbs %}
+{% sitetree_breadcrumbs from "maintree" template "core/breadcrumbs.html" %}
+{% endblock %}
+

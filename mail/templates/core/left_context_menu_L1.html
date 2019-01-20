@@ -1,0 +1,33 @@
+{% load sitetree %}
+
+         
+          
+{% for item in sitetree_items %}
+
+
+{% if item.is_current %}
+{% if item.has_children %}
+
+ <!-- Sidebar Menu -->
+<div class="mt-4 mb-1 text-uppercase d-none d-lg-block text-muted">
+	<small>Context</small>
+</div>
+<ul id="sidebarNav2" class="nav nav-dark flex-column">
+          
+          
+
+	<li class="nav-item">
+		<a href="#navid{{ item.id }}" class="nav-link {% if item.is_current or item.in_current_branch %}{% else %}collapsed{% endif %}" data-toggle="collapse" aria-expanded="{% if item.is_current or item.in_current_branch %}true{% else %}false{% endif %}" aria-controls="navid{{ item.id }}" >
+			<i class="fa fa-navicon" aria-hidden="true"></i>
+			<span class="d-none d-lg-inline">{{ item.title_resolved }}</span>
+		</a>
+    	<ul id="navid{{ item.id }}" class="nav flex-column bg-dark collapse {% if item.is_current or item.in_current_branch %}show{% endif %}" data-parent="#sidebarNav">
+     		{% sitetree_children of item for menu template "core/left_menu_L2.html" %}
+		</ul>
+	</li>
+
+</ul>
+{% endif %}
+{% endif %}
+{% endfor %}
+

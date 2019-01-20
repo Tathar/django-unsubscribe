@@ -1,0 +1,61 @@
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+<div data-formset-form>
+	{% for hidden_field in form.hidden_fields %}
+	  {{ hidden_field }}
+	{% endfor %}
+	
+	{% if form.non_field_errors %}
+	  <div class="alert alert-danger" role="alert">
+	    {% for error in form.non_field_errors %}
+	      {{ error }}
+	    {% endfor %}
+	  </div>
+	{% endif %}
+	
+	{% for field in form.visible_fields %}
+		{% if field.label == "Delete" %}
+			{% render_field field style="display: none" %}
+		{% else %}
+		  <div class="form-group">
+		    {{ field.label_tag }}
+		
+		    {% if form.is_bound %}
+		      {% if field.errors %}
+		      	<div class="input-group">
+		        {% render_field field class="form-control is-invalid" %}
+            	<div class="input-group-append">
+                	<button type="button" class="btn btn-danger" data-formset-delete-button >-</button>
+           		</div>
+            	</div>
+		        {% for error in field.errors %}
+		          <div class="invalid-feedback">
+		            {{ error }}
+		          </div>
+		        {% endfor %}
+		      {% else %}
+		      	<div class="input-group">
+		        {% render_field field class="form-control is-valid" %}
+            	<div class="input-group-append">
+                	<button type="button" class="btn btn-danger" data-formset-delete-button >-</button>
+           		</div>
+            	</div>
+		      {% endif %}
+		    {% else %}
+		      	<div class="input-group">
+		      {% render_field field class="form-control" %}
+            	<div class="input-group-append">
+                	<button type="button" class="btn btn-danger" data-formset-delete-button >-</button>
+           		</div>
+            	</div>
+		    {% endif %}
+		
+		    {% if field.help_text %}
+		      <small class="form-text text-muted">{{ field.help_text }}</small>
+		    {% endif %}
+		</div>
+		{% endif %}
+
+	{% endfor %}
+</div>

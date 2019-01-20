@@ -1,0 +1,10 @@
+python3
+django
+django_sitetree
+django_widget_tweaks
+django-formset-js
+imapclient
+pyzmail ( or pyzmail36)
+bs4
+
+pip install django django_sitetree django_widget_tweaks imapclient pyzmail36 bs4 django-formset-js

@@ -1,0 +1,19 @@
+{% load sitetree %}
+
+{% if sitetree_items|length_is:"1" %}
+{% else %}
+<!-- Breadcrumbs -->
+        <div class="row px-5 pt-5 pb-0 no-gutters">
+        <div class="col-lg-12">
+        <h2>{% sitetree_page_title from "maintree" %}</h2>
+        {% for item in sitetree_items %}
+            {% if not forloop.last %}
+                <a href="{% sitetree_url for item %}">{{ item.title_resolved }}</a> / 
+            {% else %}
+                <strong>{{ item.title_resolved }}</strong>
+            {% endif %}
+        {% endfor %}
+        </div>
+        </div>
+<!-- /Breadcrumbs -->
+{% endif %}

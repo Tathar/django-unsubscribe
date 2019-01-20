@@ -1,0 +1,163 @@
+{% extends "core/base_left_context_menu.html" %}
+
+{% load sitetree %}
+
+{% block container %}
+<section class="widget shadow-01 mb-4" id="widget-01">
+	<div class="widget-block">
+	<header>
+	    <h3 id=address >{{ mailtask.address }}</h3>
+	</header>
+
+{% if error_message %}
+<div id=message-alert class="alert alert-danger">{{ error_message }}</div>
+{% endif %}
+
+<br>
+<form action="{% url 'mail:unsubscribe' mailtask.pk %}" method="post">
+{% csrf_token %}
+<table id=tableSpam class="table table-bordered table-striped table-sm">
+<thead>
+<tr><th><div class="form-check"><label class="form-check-label"><input type="checkbox" name="select-all" id="select-all" class="form-check-input" value="">all</label></div></th><th>sender</th><th>subject</th><th>link</th></tr>
+</thead>
+<tbody>
+{% for element in spam %}
+    <tr id="{{ element.UID }}" ><td><input type="checkbox" name="mail" id="mail{{ forloop.counter }}" value="{{ element.pk }}"></td><td>{{ element.sender }}</td><td> {{ element.subject }}</td><td><a href={{ element.url }} target=_blank >url</a></td></tr>
+{% endfor %}
+</tbody>
+</table>
+<input type="submit" class="btn btn-primary" value="Unsubscribe">
+</form>
+</div>
+</section>
+{% endblock %}
+
+
+{% block custom_js %}
+<script>
+$('#select-all').click(function(event) {   
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;                        
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;                       
+        });
+    }
+});
+
+var nb_new_mail = 0;
+var loop;
+var anim = false;
+var pourcent = 0;
+
+function get_new_mail( data ) {
+
+	if (data.status === "ok") {
+		$( "#message-alert" ).remove();
+		if ($("#mail_progress_div").length) {$("#mail_progress_div").remove()}
+		if (!(typeof data["num"] === 'undefined') && data["num"] > 0) {
+			nb_new_mail = data["num"]
+			$( "#address" ).after(' <div class="progress" id=mail_progress_div ><div id=mail_progress class="progress-bar" style="width:0%" ></div></div>')	
+			add_row(data)
+			del_row(data)
+			ajax_get_action()
+			ajax_get_new_mail_numbers()
+		}
+	}else if (data.status === "error") {
+			if ($("#mail_progress_div").length) {$("#mail_progress_div").remove()}
+			mydiv = $( "#address" ).after('<div id=message-alert class="alert alert-danger"></div>')
+			$( "#message-alert" ).append(data.error_message);
+	}
+};
+
+function ajax_get_new_mail_numbers() {
+    $.getJSON("{{ request.path }}",
+    			{
+  		  		ajax:"get_new_mail_numbers",
+    			},
+    			get_new_mail_numbers );
+};
+   
+
+function get_new_mail_numbers( data ) {
+	if (data.status === "ok") {
+		$( "#message-alert" ).remove();
+		if (!(typeof data["num"] === 'undefined')) {
+			pourcent = (((nb_new_mail - data["num"]) * 100 ) / nb_new_mail )
+			$("#mail_progress")[0].style.width = pourcent + "%";
+		}
+		add_row(data)
+		del_row(data)
+					
+	}else if (data.status == "error") {
+			mydiv = $( "#address" ).after('<div id=message-alert class="alert alert-danger"></div>')
+			$( "#message-alert" ).append(data.error_message);
+	}
+	
+	loop = setTimeout('ajax_get_new_mail_numbers();',100);
+};
+
+
+function ajax_get_action() {
+    $.getJSON("{{ request.path }}",
+    			{
+  		  		ajax:"action",
+    			},
+    			get_action );
+};
+
+function add_row(data) {
+	if (!(typeof data.add === 'undefined')) {
+		$.each(data.add, function (row, value) {
+			if ( !($("#"+value.UID).length )) {
+				$("#tableSpam > tbody:last").append('<tr id=' + value.UID + '><td><input type="checkbox" name="mail" ></td><td>' + value.sender + '</td><td>' + value.subject + '</td><td><a href="' + value.url + '"arget=_blank >url</a></td></tr>')
+			}
+		})
+	}
+}
+
+function del_row(data) {
+	if (!(typeof data.del === 'undefined')) {
+		$.each(data.del, function (row, value) {
+			del = $("#"+value)
+			if ( del.length )  {
+				del.remove()
+			}
+		})
+	}
+}
+
+function get_action( data ) {
+	if (data.status === "ok") {
+		$( "#message-alert" ).remove();
+		add_row(data)
+		del_row(data)
+	}else if (data.status == "error") {
+			mydiv = $( "#address" ).after('<div id=message-alert class="alert alert-danger"></div>')
+			$( "#message-alert" ).append(data.error_message);
+	}
+	clearInterval(loop);
+	if ($("#mail_progress_div").length) {$("#mail_progress_div").remove()}
+};
+
+
+
+
+$( document ).ready(function() {
+    $.getJSON("{{ request.path }}",
+    			{
+  		  		ajax:"load",
+    			},
+    			get_new_mail );
+    
+    if ($("#mail_progress_div").length) {$("#mail_progress_div").remove()}
+    $( "#address" ).after(' <div class="progress" id=mail_progress_div ><div id=mail_progress class="progress-bar progress-bar-striped progress-bar-animated" style="width:100%" ></div></div>')
+    
+
+});
+</script>
+{% endblock %}
+

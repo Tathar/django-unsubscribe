@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+{% load sitetree %}
+
+{% block left-menu %}
+          <!-- Sidebar Menu -->
+          <div class="mb-1 text-uppercase d-none d-lg-block text-muted">
+            <small>General</small>
+          </div>
+          <ul id="sidebarNav" class="nav nav-dark flex-column">
+          
+          	{% sitetree_menu from "maintree" include "trunk,topmenu" template "core/left_menu_L1.html" %}
+
+          </ul>
+{% endblock %}

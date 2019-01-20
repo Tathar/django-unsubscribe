@@ -1,0 +1,27 @@
+{% extends "core/base_left_context_menu.html" %}
+
+{% load sitetree %}
+
+{% block container %}
+{% if pks %}
+<section class="widget shadow-01 mb-4" id="widget-01">
+	<div class="widget-block">
+	<header>
+	    <h3>Boite mail</h3>
+	</header>
+<table id=tableSpam class="table table-bordered table-striped table-sm">
+<thead>
+	<tr><th>address</th><th>edit</th></tr>
+</thead>
+    {% for usermail in ViewAllMailAddress %}
+    {% if usermail.id in pks %}<tr><td><a href="{% url 'mail:detail' usermail.pk %}">{{ usermail.address }}</a></td><td><a href="{% url 'mail:editserver' usermail.pk %}">edit </a><a href="{% url 'mail:remmail' usermail.pk %}">del</a></td></tr>{% endif %} 
+    {% endfor %}
+
+</table>
+</div>
+</section>
+    
+{% else %}
+    <p>No Mail address.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "core/base_left_context_menu.html" %}
+
+{% load sitetree %}
+
+{% block container %}
+<form action="" method="post" >
+
+<section class="widget shadow-01 mb-4" id="widget-01">
+	<div class="widget-block">
+  			{% csrf_token %}
+  			{% include 'core/bs4form.html' with form=form %}
+
+	</div>
+</section>
+
+<section class="widget shadow-01 mb-4" id="widget-01">
+	<div class="widget-block">
+  			{% include 'core/bs4FormSet.html' with formset=excluded_formset submit_btn="Submit" add_btn="add" only %}	
+  			
+	</div>
+	
+  			
+</section>
+</form>
+{% endblock %}
+
+
+{% block custom_js %}
+{% endblock %}
+
+
