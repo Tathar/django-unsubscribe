@@ -234,10 +234,10 @@ class NewServerView(ObjectFormView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-#         if self.request.POST:
-#             context['excluded_formset'] = ExcludedFormSet(self.request.POST)
-#         else:
-#             context['excluded_formset'] = ExcludedFormSet()
+        if self.request.POST:
+            context['excluded_formset'] = ExcludedFormSet(self.request.POST)
+        else:
+            context['excluded_formset'] = ExcludedFormSet()
             
             
         return context
@@ -334,11 +334,11 @@ class EditServerView(ObjectFormView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-#         if self.request.POST:
-#             context['excluded_formset'] = ExcludedFormSet(self.request.POST, instance=self.object)
-#             context['excluded_formset'].full_clean()
-#         else:
-#             context['excluded_formset'] = ExcludedFormSet(instance=self.object)
+        if self.request.POST:
+            context['excluded_formset'] = ExcludedFormSet(self.request.POST, instance=self.object)
+            context['excluded_formset'].full_clean()
+        else:
+            context['excluded_formset'] = ExcludedFormSet(instance=self.object)
         return context
     
     def form_valid(self, form):
