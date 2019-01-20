@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'jquery',
     'djangoformsetjs',
-    'bootstrap4',
     'mail',
 ]
 
