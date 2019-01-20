@@ -21,12 +21,12 @@ class UserMail(models.Model):
 
 class Excluded(models.Model):
     userMail = models.ForeignKey(UserMail, on_delete=models.CASCADE)
-    sender = models.CharField(max_length=32,blank=False)
+    sender = models.CharField(max_length=64,blank=False,verbose_name="Adresse", help_text="adresse mail a exclure")
     def __str__(self):
         return self.sender
         
 class Included(models.Model):
-    word = models.CharField(max_length=32,blank=False)
+    word = models.CharField(max_length=64,blank=False)
     def __str__(self):
         return self.word
     

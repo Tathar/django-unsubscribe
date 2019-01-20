@@ -15,8 +15,10 @@
 
 <section class="widget shadow-01 mb-4" id="widget-01">
 	<div class="widget-block">
-  			{% include 'core/bs4FormSet.html' with formset=excluded_formset submit_btn="Submit" add_btn="add" only %}	
-  			
+	<div >
+	<h4>liste d'adresse a exclure</h4><br>
+	</div>
+  		{% include 'core/bs4FormSet.html' with formset=excluded_formset submit_btn="Submit" add_btn="add" only %}	
 	</div>
 	
   			
