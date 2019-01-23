@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import re
 import email
 from urllib import request
+from collections import defaultdict
  
 import copy
 #from builtins import None
@@ -14,7 +15,7 @@ class MailTask(UserMail) :
     class Meta:
         proxy = True
          
-    _mail_action = {}
+    _mail_action = defaultdict(dict)
  
     def get_mail_action_numbers(self):
         return_dict = copy.deepcopy(self._mail_action[self.address])
@@ -28,7 +29,7 @@ class MailTask(UserMail) :
         return return_dict
      
     def set_recheck_mail(self):
-        self._mail_action[self.address] = {}
+#        self._mail_action[self.address] = {}
         self._mail_action[self.address]["num"] = self.mailbox_set.count()
         return self._mail_action[self.address]["num"]
      
@@ -77,11 +78,12 @@ class MailTask(UserMail) :
         if not "del" in return_dict.keys() :
             return_dict["del"] = []
              
-        if not self.address in self._mail_action.keys() :
-            self._mail_action[self.address] = {"num": 0}
-             
         if not "num" in return_dict.keys() :
             return_dict["num"] = 0
+             
+        if not self.address in self._mail_action.keys() :
+            self._mail_action[self.address] = {"num": 0}
+
              
         server = IMAPClient(self.server, use_uid=True , ssl=self.SSL)
         try :
@@ -381,12 +383,12 @@ class BoxTask(MailBox) :
      
         words_re = []
         for include_obj in Included.objects.all():
-            words_re.append(re.compile(include_obj.word,re.I))
+            words_re.append(re.compile(include_obj.word,re.I ))
  
         excludes_re = []
         #for exclude_obj in UserMail.objects.get(pk=UMpk).excluded_set.all():
         for exclude_obj in UserMail.objects.get(pk=UMPK).excluded_set.all():
-            excludes_re.append(re.compile(exclude_obj.sender,re.I))
+            excludes_re.append(re.compile(exclude_obj.sender,re.I ))
  
         senders = message.get_address('from')
      
@@ -491,11 +493,11 @@ def get_spam(mypk, account, pwd, usermail = None):
      
     words_re = []
     for include_obj in Included.objects.all():
-        words_re.append(re.compile(include_obj.word,re.I.A))
+        words_re.append(re.compile(include_obj.word,re.I ))
  
     excludes_re = []
     for exclude_obj in usermail.excluded_set.all():
-        excludes_re.append(re.compile(exclude_obj.sender,re.I))
+        excludes_re.append(re.compile(exclude_obj.sender,re.I ))
  
 #account = input('adresse：')
 #pw = input('password：')
